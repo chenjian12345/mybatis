@@ -21,6 +21,6 @@
     </environments>
     <!-- 映射文件 -->
     <mappers>
-        <mapper resource="com.cj.mapper/User.xml"/>
+        <mapper resource="mapper/User.xml"/>
     </mappers>
 </configuration>

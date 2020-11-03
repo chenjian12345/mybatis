@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.User">
+    <select id="findAll" resultType="User">
+        select * from  user
+    </select>
+    <insert id="addUser" parameterType="user" >
+        insert into user (userId, userName, password, active) values (#{userId}, #{userName}, #{password}, #{active})
+    </insert>
+    <delete id="deleteById" parameterType="user">
+        delete from user where userId = #{userId}
+    </delete>
+    <select id="findByUserId" resultType="user">
+        select * from user where userId = #{userId}
+    </select>
+    <update id="updateUser" parameterType="user">
+        update user set userName = #{userName}, active = #{active} where userId = #{userId}
+    </update>
+    <select id="findByUserName" resultType="user">
+        select * from user u where u.userName = #{userName}
+    </select>
+    <select id="findByUserNameLike" resultType="user">
+        select * from user u where u.userName like concat('%',#{userName},'%')
+    </select>
+    <select id="findByUserIdAndUserNameLike" resultType="user">
+        select * from user u where u.userId = #{userId} and u.userName like concat('%', #{userName}, '%')
+    </select>
+    <select id="findByAgeGreaterThanAndUserName" resultType="user">
+        select * from user u where u.age > #{age} and u.userName like concat('%', #{userName}, '%')
+    </select>
+</mapper>

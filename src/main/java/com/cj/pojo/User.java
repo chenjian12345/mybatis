@@ -12,6 +12,10 @@ public class User {
 
     private String password;
 
+    private Integer age;
+
+    private Byte active;
+
     public String getUserId()
     {
         return userId;
@@ -40,5 +44,25 @@ public class User {
     public void setPassword(String password)
     {
         this.password = password;
+    }
+
+    public Byte getActive()
+    {
+        return active;
+    }
+
+    public void setActive(Byte active)
+    {
+        this.active = active;
+    }
+
+    public Integer getAge()
+    {
+        return age;
+    }
+
+    public void setAge(Integer age)
+    {
+        this.age = age;
     }
 }
