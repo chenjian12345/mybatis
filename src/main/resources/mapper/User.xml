@@ -2,6 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mapper.User">
+    <resultMap id="userBean" type="User">
+        <id column="userId" property="userId"/>
+        <result column="userName" property="userName"/>
+
+        <association property="class1" javaType="Class">
+            <id column="classId" property="classId"/>
+            <result column="className" property="className"/>
+        </association>
+    </resultMap>
+
     <select id="findAll" resultType="User">
         select * from  user
     </select>
@@ -11,22 +21,72 @@
     <delete id="deleteById" parameterType="user">
         delete from user where userId = #{userId}
     </delete>
+    <select id="findByUserName" resultType="user">
+        select * from user u
+        <if test="userName != null">
+            where u.userName = #{userName}
+        </if>
+    </select>
     <select id="findByUserId" resultType="user">
         select * from user where userId = #{userId}
     </select>
     <update id="updateUser" parameterType="user">
-        update user set userName = #{userName}, active = #{active} where userId = #{userId}
+        update user
+        <set>
+            <if test="userName != null">
+                userName = #{userName},
+            </if>
+            <if test="active != null">
+                active = #{active}
+            </if>
+        </set>
+        where userId = #{userId}
     </update>
-    <select id="findByUserName" resultType="user">
-        select * from user u where u.userName = #{userName}
-    </select>
     <select id="findByUserNameLike" resultType="user">
-        select * from user u where u.userName like concat('%',#{userName},'%')
+        <bind name="userNameLike" value="'%' + userName + '%'"/>
+        select * from user u where u.userName like #{userNameLike}
     </select>
     <select id="findByUserIdAndUserNameLike" resultType="user">
-        select * from user u where u.userId = #{userId} and u.userName like concat('%', #{userName}, '%')
+        select * from user u
+        <where>
+            <if test="userId != null">
+                and u.userId = #{userId}
+            </if>
+            <if test="userName != null">
+                and u.userName like concat('%', #{userName}, '%')
+            </if>
+        </where>
     </select>
     <select id="findByAgeGreaterThanAndUserName" resultType="user">
         select * from user u where u.age > #{age} and u.userName like concat('%', #{userName}, '%')
+    </select>
+    <select id="findAllLeftJoinClass" resultMap="userBean">
+        select * from user u left join class c on u.classId = c.classId
+    </select>
+    <select id="findByUserNameAndAgeAndActive" resultType="user">
+        select * from user u
+        <where>
+            <choose>
+                <when test="userName != null">
+                    and u.userName = #{userName}
+                </when>
+                <when test="age != null and age != 0">
+                    and u.age > #{age}
+                </when>
+                <otherwise>
+                    and u.active = 0
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+    <select id="findByUserIds" resultType="user">
+        select * from user u
+        <where>
+            u.userId in
+            <foreach collection="userIdList" item="userId" index="index" open="(" separator="," close=")">
+                #{userId}
+            </foreach>
+            and u.age = #{age}
+        </where>
     </select>
 </mapper>

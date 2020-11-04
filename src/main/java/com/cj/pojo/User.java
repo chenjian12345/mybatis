@@ -14,6 +14,10 @@ public class User {
 
     private Integer age;
 
+    private String classId;
+
+    private Class class1;
+
     private Byte active;
 
     public String getUserId()
@@ -64,5 +68,32 @@ public class User {
     public void setAge(Integer age)
     {
         this.age = age;
+    }
+
+    public Class getClass1()
+    {
+        return class1;
+    }
+
+    public void setClass1(Class class1)
+    {
+        this.class1 = class1;
+    }
+
+    public String getClassId()
+    {
+        return classId;
+    }
+
+    public void setClassId(String classId)
+    {
+        this.classId = classId;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "User{" + "userId='" + userId + '\'' + ", userName='" + userName + '\'' + ", password='" + password
+                + '\'' + ", age=" + age + ", class1=" + class1 + ", active=" + active + '}';
     }
 }

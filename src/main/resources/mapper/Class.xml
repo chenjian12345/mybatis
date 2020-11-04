@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.Class">
+    <resultMap id="oneToMany" type="Class">
+        <id column="classId" property="classId"/>
+        <result column="className" property="className"/>
+        <result column="active" property="active"/>
+
+        <collection property="userList" ofType="User">
+            <id column="userId" property="userId"/>
+            <result column="userName" property="userName"/>
+            <result column="active" property="active"/>
+        </collection>
+    </resultMap>
+    <select id="findAll" resultMap="oneToMany">
+        select c.*, u.*, c.classId 'cId', c.className 'cName', c.active 'cActive', u.userId 'uId', u.userName 'uName', u.active 'uActive' from class c left join user u on c.classId = u.classId
+    </select>
+    <select id="findByClassId" resultMap="oneToMany">
+        select c.*, u.* from class c left join user u on c.classId = u.classId where c.classId = #{classId}
+    </select>
+</mapper>

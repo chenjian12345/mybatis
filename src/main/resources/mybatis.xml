@@ -22,5 +22,8 @@
     <!-- 映射文件 -->
     <mappers>
         <mapper resource="mapper/User.xml"/>
+        <mapper resource="mapper/Class.xml"/>
+        <mapper class="com.cj.mapper.UserMapper"/>
+        <mapper class="com.cj.mapper.ClassMapper"/>
     </mappers>
 </configuration>
