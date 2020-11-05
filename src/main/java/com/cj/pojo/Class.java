@@ -15,7 +15,7 @@ public class Class {
 
     private Byte active;
 
-    private List<User> userList;
+    private List<Student> studentList;
 
     public String getClassId()
     {
@@ -47,20 +47,20 @@ public class Class {
         this.active = active;
     }
 
-    public List<User> getUserList()
+    public List<Student> getStudentList()
     {
-        return userList;
+        return studentList;
     }
 
-    public void setUserList(List<User> userList)
+    public void setStudentList(List<Student> studentList)
     {
-        this.userList = userList;
+        this.studentList = studentList;
     }
 
     @Override
     public String toString()
     {
         return "Class{" + "classId='" + classId + '\'' + ", className='" + className + '\'' + ", active=" + active
-                + ", userList=\r\n" + userList + "}";
+                + ", studentList=" + studentList + '}';
     }
 }

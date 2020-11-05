@@ -13,6 +13,9 @@
             <result column="active" property="active"/>
         </collection>
     </resultMap>
+    <select id="findAll" resultType="Class">
+
+    </select>
     <select id="findAll" resultMap="oneToMany">
         select c.*, u.*, c.classId 'cId', c.className 'cName', c.active 'cActive', u.userId 'uId', u.userName 'uName', u.active 'uActive' from class c left join user u on c.classId = u.classId
     </select>

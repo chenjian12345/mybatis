@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.TeacherClass">
+    <resultMap id="teacherClassBean" type="TeacherClass">
+        <id column="teacher_class_id" property="teacherClassId"/>
+        <result column="teacher_id" property="teacherId"/>
+        <result column="class_id" property="classId"/>
+        <result column="active" property="active"/>
+
+        <collection property="class1" ofType="Class">
+            <id column="class_id" property="classId"/>
+            <result column="class_name" property="className"/>
+            <result column="active" property="active"/>
+        </collection>
+        <collection property="teacher" ofType="Teacher">
+            <id column="teacher_id" property="teacherId"/>
+            <result column="teacher_name" property="teacherName"/>
+            <result column="active" property="active"/>
+        </collection>
+    </resultMap>
+    <select id="findAll" resultMap="teacherClassBean">
+      select * from t_teacher_class tc, t_teacher t, t_class c where tc.teacher_id = t.teacher_id and tc.class_id = c.class_id
+    </select>
+</mapper>

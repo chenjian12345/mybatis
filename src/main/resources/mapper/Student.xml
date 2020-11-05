@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.Student">
+    <resultMap id="studentBean" type="Student">
+        <id column="student_id" property="studentId"/>
+        <result column="student_name" property="studentName"/>
+        <result column="class_id" property="classId"/>
+        <result column="age" property="age"/>
+        <result column="active" property="active"/>
+
+        <association property="class1" javaType="Class">
+            <id column="class_id" property="classId"/>
+            <result column="class_name" property="className"/>
+            <result column="active" property="active"/>
+        </association>
+    </resultMap>
+
+    <select id="findAll" resultType="Student">
+        select * from  t_student
+    </select>
+    <insert id="addStudent" parameterType="Student" >
+        insert into t_student (STUDENT_ID, STUDENT_NAME, CLASS_ID, AGE, ACTIVE) values (#{studentId}, #{studentName}, #{classId}, #{age},  #{active})
+    </insert>
+    <delete id="deleteByStudentId" parameterType="Student">
+        delete from t_student where STUDENT_ID = #{studentId}
+    </delete>
+    <select id="findByStudentId" resultType="Student">
+        select * from t_student where STUDENT_ID = #{studentId}
+    </select>
+    <update id="updateStudent" parameterType="Student">
+        update t_student
+        <set>
+            <if test="studentName != null">
+                STUDENT_NAME = #{studentName},
+            </if>
+            <if test="active != null">
+                ACTIVE = #{active}
+            </if>
+        </set>
+        where student_Id = #{studentId}
+    </update>
+    <select id="findByStudentName" resultType="Student">
+        select * from t_student
+        <if test="studentName != null">
+            where student_name = #{studentName}
+        </if>
+    </select>
+    <select id="findByStudentNameLike" resultType="Student">
+        <bind name="studentNameLike" value="'%' + studentName + '%'"/>
+        select * from t_student where student_name like #{studentNameLike}
+    </select>
+    <select id="findByStudentIdAndStudentNameLike" resultType="Student">
+        <bind name="studentNameLike" value="'%' + studentName + '%'"/>
+        select * from t_student
+        <where>
+            <if test="studentId != null">
+                and student_Id = #{studentId}
+            </if>
+            <if test="studentName != null">
+                and student_name like #{studentNameLike}
+            </if>
+        </where>
+    </select>
+    <select id="findByAgeGreaterThanAndStudentName" resultType="Student">
+        select * from t_student where age > #{age} and student_name like concat('%', #{studentName}, '%')
+    </select>
+    <select id="findAllLeftJoinClass" resultMap="studentBean">
+        select * from t_student s left join t_class c on s.class_id = c.class_id
+    </select>
+    <select id="findByStudentNameAndAgeAndActive" resultType="Student">
+        select * from t_student s
+        <where>
+            <choose>
+                <when test="studentName != null">
+                    <bind name="studentNameLike" value="'%' + studentName + '%'"/>
+                    and s.student_name like #{studentNameLike}
+                </when>
+                <when test="age != null and age != 0">
+                    and s.age > #{age}
+                </when>
+                <otherwise>
+                    and s.active = 0
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+    <select id="findByStudentIds" resultType="Student">
+        select * from t_student
+        <where>
+            student_id in
+            <foreach collection="studentIdList" item="studentId" index="index" open="(" separator="," close=")">
+                #{studentId}
+            </foreach>
+            <if test="age != null and age != 0">
+                and age = #{age}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    <!-- 使用驼峰命名法，userId对应数据库的user_id -->
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
     <!-- 别名 -->
     <typeAliases>
         <package name="com.cj.pojo"/>
@@ -21,9 +25,10 @@
     </environments>
     <!-- 映射文件 -->
     <mappers>
-        <mapper resource="mapper/User.xml"/>
-        <mapper resource="mapper/Class.xml"/>
-        <mapper class="com.cj.mapper.UserMapper"/>
+        <mapper resource="mapper/Teacher.xml"/>
+        <mapper resource="mapper/Student.xml"/>
+        <mapper resource="mapper/TeacherClass.xml"/>
+        <mapper class="com.cj.mapper.StudentMapper"/>
         <mapper class="com.cj.mapper.ClassMapper"/>
     </mappers>
 </configuration>

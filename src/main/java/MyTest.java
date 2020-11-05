@@ -1,7 +1,7 @@
 import com.cj.mapper.ClassMapper;
-import com.cj.mapper.UserMapper;
+import com.cj.mapper.StudentMapper;
+import com.cj.pojo.*;
 import com.cj.pojo.Class;
-import com.cj.pojo.User;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -23,23 +23,16 @@ public class MyTest {
         InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
         // 构建sqlSession的工厂
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
-        // 使用MyBatis提供的Resources类加载mybatis的配置文件（它也加载关联的映射文件）
-        // Reader reader = Resources.getResourceAsReader(resource);
-        // 构建sqlSession的工厂
-        // SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(reader);
         // 创建能执行映射文件中sql的sqlSession
         SqlSession session = sessionFactory.openSession();
 
         // 映射sql的标识字符串，
-        // me.gacl.mapping.userMapper是userMapper.xml文件中mapper标签的namespace属性的值，
-        // getUser是select标签的id属性值，通过select标签的id属性值就可以找到要执行的SQL
-        String statement = "mapper.User.findAll";
-        // 映射sql的标识字符串
-        // 执行查询返回一个唯一user对象的sql1
-        List<User> userList = session.selectList(statement);
-        for (User user : userList)
+        String statement = "mapper.Student.findAll???";
+        // 执行sql
+        List<Student> studentList = session.selectList(statement);
+        for (Student student : studentList)
         {
-            System.out.println("ID:" + user.getUserId() + ", NAME:" + user.getUserName());
+            System.out.println(student.toString());
         }
 
         session.commit();
@@ -47,22 +40,25 @@ public class MyTest {
     }
 
     @Test
-    public void addUser()
+    public void addStudent()
     {
         String resource = "mybatis.xml";
         InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
         SqlSession session = sessionFactory.openSession();
 
-        String statement = "mapper.User.addUser";
+        String statement = "mapper.Student.addStudent";
 
-        User user = new User();
-        user.setUserId("004");
-        user.setUserName("赵日天");
-        user.setPassword("123456");
-        user.setActive((byte) 1);
+        Student student = new Student();
+        student.setStudentId("005");
+        student.setStudentName("王大锤");
+        student.setClassId("001");
+        student.setAge(18);
+        student.setActive((byte) 1);
 
-        session.insert(statement, user);
+        int num = session.insert(statement, student);
+
+        System.out.println(num);
 
         session.commit();
         session.close();
@@ -76,73 +72,76 @@ public class MyTest {
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
         SqlSession session = sessionFactory.openSession();
 
-        String statement = "mapper.User.deleteById";
+        String statement = "mapper.Student.deleteByStudentId";
 
-        User user = new User();
-        user.setUserId("004");
+        Student student = new Student();
+        student.setStudentId("005");
 
-        session.delete(statement, user);
+        int num = session.delete(statement, student);
 
-        session.commit();
-        session.close();
-    }
-
-    @Test
-    public void findByUserId()
-    {
-        String resource = "mybatis.xml";
-        InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
-        SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
-        SqlSession session = sessionFactory.openSession();
-
-        String statement = "mapper.User.findByUserId";
-
-        User user = session.selectOne(statement, "003");
-        System.out.println("id: " + user.getUserId() +", name: "+ user.getUserName());
+        System.out.println(num);
 
         session.commit();
         session.close();
     }
 
     @Test
-    public void updateUser()
+    public void findByStudentId()
     {
         String resource = "mybatis.xml";
         InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
         SqlSession session = sessionFactory.openSession();
 
-        String statement = "mapper.User.updateUser";
+        String statement = "mapper.Student.findByStudentId";
 
-        User user = new User();
-        user.setUserId("003");
-//        user.setUserName("赵日天1");
-//        user.setActive((byte) 1);
+        Student student = session.selectOne(statement, "003");
 
-        session.update(statement, user);
+        System.out.println(student.toString());
 
         session.commit();
         session.close();
     }
 
     @Test
-    public void findByUserName()
+    public void updateStudent()
     {
         String resource = "mybatis.xml";
         InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
         SqlSession session = sessionFactory.openSession();
 
-        String statement = "mapper.User.findByUserName";
+        String statement = "mapper.Student.updateStudent";
+
+        Student student = new Student();
+        student.setStudentId("004");
+        student.setStudentName("王大锤");
+
+        int num = session.update(statement, student);
+        
+        System.out.println(num);
+
+        session.commit();
+        session.close();
+    }
+
+    @Test
+    public void findByStudentName()
+    {
+        String resource = "mybatis.xml";
+        InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
+        SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
+        SqlSession session = sessionFactory.openSession();
+
+        String statement = "mapper.Student.findByStudentName";
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("userName", null);
-//        map.put("userName", "张大炮");
+        map.put("studentName", "张大炮");
 
-        List<User> userList = session.selectList(statement, map);
-        for (User user : userList)
+        List<Student> studentList = session.selectList(statement, map);
+        for (Student student : studentList)
         {
-            System.out.println("ID:" + user.getUserId() + ", NAME:" + user.getUserName());
+            System.out.println(student.toString());
         }
 
         session.commit();
@@ -150,22 +149,22 @@ public class MyTest {
     }
 
     @Test
-    public void findByUserNameLike()
+    public void findByStudentNameLike()
     {
         String resource = "mybatis.xml";
         InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
         SqlSession session = sessionFactory.openSession();
 
-        String statement = "mapper.User.findByUserNameLike";
+        String statement = "mapper.Student.findByStudentNameLike";
 
-        User user1 = new User();
-        user1.setUserName("炮");
+        Student student1 = new Student();
+        student1.setStudentName("天");
 
-        List<User> userList = session.selectList(statement, user1);
-        for (User user : userList)
+        List<Student> studentList = session.selectList(statement, student1);
+        for (Student student : studentList)
         {
-            System.out.println("ID:" + user.getUserId() + ", NAME:" + user.getUserName());
+            System.out.println(student.toString());
         }
 
         session.commit();
@@ -173,23 +172,23 @@ public class MyTest {
     }
 
     @Test
-    public void findByUserIdAndUserNameLike()
+    public void findByStudentIdAndStudentNameLike()
     {
         String resource = "mybatis.xml";
         InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
         SqlSession session = sessionFactory.openSession();
 
-        String statement = "mapper.User.findByUserIdAndUserNameLike";
+        String statement = "mapper.Student.findByStudentIdAndStudentNameLike";
 
-        User user = new User();
-//        user.setUserId("001");
-        user.setUserName("天");
+        Student student1 = new Student();
+//        student1.setStudentId("002");
+        student1.setStudentName("天");
 
-        List<User> userList = session.selectList(statement, user);
-        for (User user1 : userList)
+        List<Student> studentList = session.selectList(statement, student1);
+        for (Student student : studentList)
         {
-            System.out.println("ID:" + user1.getUserId() + ", NAME:" + user1.getUserName());
+            System.out.println(student.toString());
         }
 
         session.commit();
@@ -197,27 +196,23 @@ public class MyTest {
     }
 
     @Test
-    public void findByAgeGreaterThanAndUserName()
+    public void findByAgeGreaterThanAndStudentName()
     {
         String resource = "mybatis.xml";
         InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
         SqlSession session = sessionFactory.openSession();
 
-        String statement = "mapper.User.findByAgeGreaterThanAndUserName";
+        String statement = "mapper.Student.findByAgeGreaterThanAndStudentName";
 
-        User user = new User();
-        user.setAge(1);
-        user.setUserName("炮");
+        Student student1 = new Student();
+        student1.setStudentName("天");
+        student1.setAge(2);
 
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        map.put("age", 1);
-//        map.put("userName", "炮");
-
-        List<User> userList = session.selectList(statement, user);
-        for (User user1 : userList)
+        List<Student> studentList = session.selectList(statement, student1);
+        for (Student student : studentList)
         {
-            System.out.println("ID:" + user1.getUserId() + ", NAME:" + user1.getUserName());
+            System.out.println(student.toString());
         }
 
         session.commit();
@@ -225,7 +220,7 @@ public class MyTest {
     }
 
     @Test
-    public void findAllClass()
+    public void findAll1()
     {
         String resource = "mybatis.xml";
         InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
@@ -275,12 +270,12 @@ public class MyTest {
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
         SqlSession session = sessionFactory.openSession();
 
-        String statement = "mapper.User.findAllLeftJoinClass";
+        String statement = "mapper.Student.findAllLeftJoinClass";
 
-        List<User> userList = session.selectList(statement);
-        for (User user : userList)
+        List<Student> studentList = session.selectList(statement);
+        for (Student student : studentList)
         {
-            System.out.println(user.toString());
+            System.out.println(student.toString());
         }
 
         session.commit();
@@ -288,23 +283,23 @@ public class MyTest {
     }
 
     @Test
-    public void findByUserNameAndAgeAndActive()
+    public void findByStudentNameAndAgeAndActive()
     {
         String resource = "mybatis.xml";
         InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
         SqlSession session = sessionFactory.openSession();
 
-        String statement = "mapper.User.findByUserNameAndAgeAndActive";
+        String statement = "mapper.Student.findByStudentNameAndAgeAndActive";
 
-        User user1 = new User();
-        user1.setUserName("张大炮");
-        user1.setAge(2);
+        Student student1 = new Student();
+        student1.setStudentName("天");
+        student1.setAge(2);
 
-        List<User> userList = session.selectList(statement, user1);
-        for (User user : userList)
+        List<Student> studentList = session.selectList(statement, student1);
+        for (Student student : studentList)
         {
-            System.out.println(user.toString());
+            System.out.println(student.toString());
         }
 
         session.commit();
@@ -312,27 +307,27 @@ public class MyTest {
     }
 
     @Test
-    public void findByUserIds()
+    public void findByStudentIds()
     {
         String resource = "mybatis.xml";
         InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
         SqlSession session = sessionFactory.openSession();
 
-        String statement = "mapper.User.findByUserIds";
+        String statement = "mapper.Student.findByStudentIds";
 
-        List<String> userIdList= new ArrayList<String>();
-        userIdList.add("001");
-        userIdList.add("002");
+        List<String> studentIdList= new ArrayList<String>();
+        studentIdList.add("001");
+        studentIdList.add("002");
 
         Map<String, Object> map1 = new HashMap<String, Object>();
-        map1.put("userIdList", userIdList);
-        map1.put("age", 1);
+        map1.put("studentIdList", studentIdList);
+        map1.put("age", 2);
 
-        List<User> userList = session.selectList(statement, map1);
-        for (User user : userList)
+        List<Student> studentList = session.selectList(statement, map1);
+        for (Student student : studentList)
         {
-            System.out.println(user.toString());
+            System.out.println(student.toString());
         }
 
         session.commit();
@@ -340,19 +335,19 @@ public class MyTest {
     }
 
     @Test
-    public void findAllWithMapper1()
+    public void findAll2()
     {
         String resource = "mybatis.xml";
         InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
         SqlSession session = sessionFactory.openSession();
 
-        UserMapper mapper = session.getMapper(UserMapper.class);
+        StudentMapper mapper = session.getMapper(StudentMapper.class);
 
-        List<User> userList = mapper.findAll();
-        for (User user : userList)
+        List<Student> studentList = mapper.findAll();
+        for (Student student : studentList)
         {
-            System.out.println(user.toString());
+            System.out.println(student.toString());
         }
 
         session.commit();
@@ -360,7 +355,7 @@ public class MyTest {
     }
 
     @Test
-    public void findAllWithMapper2()
+    public void findAll3()
     {
         String resource = "mybatis.xml";
         InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
@@ -380,19 +375,59 @@ public class MyTest {
     }
 
     @Test
-    public void findByUserIdByMapper()
+    public void findByStudentId1()
     {
         String resource = "mybatis.xml";
         InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
         SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
         SqlSession session = sessionFactory.openSession();
 
-        UserMapper mapper = session.getMapper(UserMapper.class);
+        StudentMapper mapper = session.getMapper(StudentMapper.class);
 
-        List<User> userList = mapper.findByUserId("001");
-        for (User user1 : userList)
+        List<Student> studentList = mapper.findByStudentId("001");
+        for (Student student : studentList)
         {
-            System.out.println(user1.toString());
+            System.out.println(student.toString());
+        }
+
+        session.commit();
+        session.close();
+    }
+
+    @Test
+    public void findAllTeacher()
+    {
+        String resource = "mybatis.xml";
+        InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
+        SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
+        SqlSession session = sessionFactory.openSession();
+
+        String statement = "mapper.Teacher.findAll";
+
+        List<Teacher> teacherList = session.selectList(statement);
+        for (Teacher teacher : teacherList)
+        {
+            System.out.println(teacher.toString());
+        }
+
+        session.commit();
+        session.close();
+    }
+
+    @Test
+    public void findAllClassAndTeacher()
+    {
+        String resource = "mybatis.xml";
+        InputStream is = MyTest.class.getClassLoader().getResourceAsStream(resource);
+        SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
+        SqlSession session = sessionFactory.openSession();
+
+        String statement = "mapper.TeacherClass.findAll";
+
+        List<TeacherClass> teacherClassList = session.selectList(statement);
+        for (TeacherClass teacherClass : teacherClassList)
+        {
+            System.out.println(teacherClass.toString());
         }
 
         session.commit();
