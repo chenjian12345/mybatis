@@ -350,6 +350,14 @@ public class MyTest {
             System.out.println(student.toString());
         }
 
+        StudentMapper mapper1 = session.getMapper(StudentMapper.class);
+
+        List<Student> studentList1 = mapper1.findAll();
+        for (Student student : studentList1)
+        {
+            System.out.println(student.toString());
+        }
+
         session.commit();
         session.close();
     }

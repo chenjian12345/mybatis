@@ -9,7 +9,7 @@ import java.util.List;
 public interface StudentMapper {
 
 //    @Select("select * from t_student")
-    @SelectProvider(type = StudentDynaSqlProvider.class, method = "findAll")
+//    @SelectProvider(type = StudentDynaSqlProvider.class, method = "findAll")
     List<Student> findAll();
 
     @Select("select * from t_student where class_id = #{classId}")

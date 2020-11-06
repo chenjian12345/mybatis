@@ -25,10 +25,11 @@
     </environments>
     <!-- 映射文件 -->
     <mappers>
-        <mapper resource="mapper/Teacher.xml"/>
-        <mapper resource="mapper/Student.xml"/>
-        <mapper resource="mapper/TeacherClass.xml"/>
-        <mapper class="com.cj.mapper.StudentMapper"/>
-        <mapper class="com.cj.mapper.ClassMapper"/>
+        <!--<mapper resource="mapper/Teacher.xml"/>-->
+        <!--<mapper resource="com/cj/mapper/Student.xml"/>-->
+        <!--<mapper resource="mapper/TeacherClass.xml"/>-->
+        <!--<mapper class="com.cj.mapper.StudentMapper"/>-->
+        <!--<mapper class="com.cj.mapper.ClassMapper"/>-->
+        <package name="com.cj.mapper"/>
     </mappers>
 </configuration>

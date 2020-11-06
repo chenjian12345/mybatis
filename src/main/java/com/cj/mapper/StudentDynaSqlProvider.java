@@ -1,9 +1,6 @@
 package com.cj.mapper;
 
-import com.cj.pojo.Student;
 import org.apache.ibatis.jdbc.SQL;
-
-import java.util.List;
 
 /**
  * @Description: TODO
